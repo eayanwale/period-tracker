@@ -1,0 +1,365 @@
+:root {
+  --bg: #fff5f7;
+  --surface: #ffffff;
+  --text: #2b1c22;
+  --subtle: #8a6b74;
+  --primary: #c2426b;
+  --primary-soft: #f6d7e1;
+  --fertile: #7ea7c9;
+  --fertile-soft: #dce9f2;
+  --border: #f0dbe1;
+  --shadow: 0 2px 12px rgba(194, 66, 107, 0.08);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1c1216;
+    --surface: #271a1f;
+    --text: #f5e9ec;
+    --subtle: #b592a0;
+    --primary: #e97ea1;
+    --primary-soft: #4a2733;
+    --fertile: #7ea7c9;
+    --fertile-soft: #223342;
+    --border: #3a262d;
+    --shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+button {
+  font-family: inherit;
+}
+
+/* --- Passcode gate --- */
+.gate {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.gate-form {
+  width: 100%;
+  max-width: 320px;
+  text-align: center;
+}
+
+.gate-form h1 {
+  font-size: 2rem;
+  margin-bottom: 4px;
+  color: var(--primary);
+}
+
+.gate-subtitle {
+  color: var(--subtle);
+  margin-bottom: 24px;
+}
+
+.gate-form input {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 1rem;
+  margin-bottom: 12px;
+  text-align: center;
+  letter-spacing: 2px;
+}
+
+.gate-form button {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  background: var(--primary);
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.gate-error {
+  color: var(--primary);
+  margin-top: 12px;
+  font-size: 0.9rem;
+}
+
+/* --- App shell --- */
+.app {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.app-header {
+  padding: env(safe-area-inset-top, 16px) 20px 8px;
+}
+
+.app-header h1 {
+  font-size: 1.4rem;
+  color: var(--primary);
+  margin: 0;
+}
+
+.view {
+  flex: 1;
+  padding: 12px 20px 24px;
+  overflow-y: auto;
+}
+
+/* --- Cards --- */
+.card {
+  background: var(--surface);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow);
+}
+
+.card-label {
+  margin: 0 0 6px;
+  color: var(--subtle);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.big-date {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--text);
+}
+
+.mid-date {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--text);
+}
+
+.subtle {
+  color: var(--subtle);
+  margin: 4px 0 0;
+  font-size: 0.9rem;
+}
+
+.stats-card {
+  display: flex;
+  justify-content: space-between;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.stat-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--subtle);
+  text-align: center;
+  margin-top: 2px;
+}
+
+.primary-btn {
+  width: 100%;
+  padding: 16px;
+  border-radius: 14px;
+  border: none;
+  background: var(--primary);
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* --- Calendar --- */
+.calendar-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.calendar-nav button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--primary);
+  padding: 4px 12px;
+}
+
+#cal-month-label {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.cal-day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 0.85rem;
+  position: relative;
+}
+
+.cal-day.logged-start,
+.cal-day.logged-range {
+  background: var(--primary);
+  color: white;
+  font-weight: 600;
+}
+
+.cal-day.predicted-period {
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.cal-day.fertile {
+  background: var(--fertile-soft);
+  color: var(--fertile);
+}
+
+.legend {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+  font-size: 0.8rem;
+  color: var(--subtle);
+}
+
+.legend span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot-logged {
+  background: var(--primary);
+}
+
+.dot-predicted {
+  background: var(--primary-soft);
+}
+
+.dot-fertile {
+  background: var(--fertile-soft);
+}
+
+/* --- History --- */
+.add-date-form {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.add-date-form input {
+  flex: 1;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+}
+
+.add-date-form button {
+  padding: 12px 18px;
+  border-radius: 10px;
+  border: none;
+  background: var(--primary);
+  color: white;
+  font-weight: 600;
+}
+
+.history-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.history-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 8px;
+  box-shadow: var(--shadow);
+}
+
+.history-list .delete-btn {
+  background: none;
+  border: none;
+  color: var(--subtle);
+  font-size: 1.2rem;
+  padding: 4px 8px;
+}
+
+.history-empty {
+  color: var(--subtle);
+  text-align: center;
+  padding: 40px 0;
+}
+
+/* --- Tab bar --- */
+.tab-bar {
+  display: flex;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 14px 0;
+  border: none;
+  background: none;
+  color: var(--subtle);
+  font-size: 0.9rem;
+}
+
+.tab-btn.active {
+  color: var(--primary);
+  font-weight: 700;
+}

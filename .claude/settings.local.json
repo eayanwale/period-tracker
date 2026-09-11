@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(node --version 2>$null)",
+      "PowerShell(terraform --version 2>$null)",
+      "PowerShell(aws --version 2>$null)",
+      "PowerShell(aws sts get-caller-identity 2>$null)"
+    ]
+  }
+}

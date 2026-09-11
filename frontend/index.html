@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Cycle</title>
+  <meta name="theme-color" content="#c2426b" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Cycle" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- Passcode gate -->
+  <div id="gate" class="gate">
+    <form id="gate-form" class="gate-form">
+      <h1>Cycle</h1>
+      <p class="gate-subtitle">Enter the passcode to continue</p>
+      <input
+        id="passcode-input"
+        type="password"
+        inputmode="numeric"
+        autocomplete="off"
+        placeholder="Passcode"
+        required
+      />
+      <button type="submit">Unlock</button>
+      <p id="gate-error" class="gate-error" hidden>That passcode didn't work.</p>
+    </form>
+  </div>
+
+  <!-- Main app -->
+  <div id="app" class="app" hidden>
+    <header class="app-header">
+      <h1>Cycle</h1>
+    </header>
+
+    <main id="view-today" class="view">
+      <section class="card next-period-card">
+        <p class="card-label">Next period expected</p>
+        <p id="next-period-date" class="big-date">—</p>
+        <p id="next-period-relative" class="subtle"></p>
+      </section>
+
+      <section class="card">
+        <p class="card-label">Fertile window (estimate)</p>
+        <p id="fertile-window" class="mid-date">—</p>
+      </section>
+
+      <section class="card stats-card">
+        <div class="stat">
+          <span id="avg-cycle-length" class="stat-value">—</span>
+          <span class="stat-label">avg cycle (days)</span>
+        </div>
+        <div class="stat">
+          <span id="cycle-variance" class="stat-value">—</span>
+          <span class="stat-label">variance (± days)</span>
+        </div>
+        <div class="stat">
+          <span id="logged-count" class="stat-value">—</span>
+          <span class="stat-label">periods logged</span>
+        </div>
+      </section>
+
+      <button id="log-today-btn" class="primary-btn">Log period started today</button>
+    </main>
+
+    <main id="view-calendar" class="view" hidden>
+      <div class="calendar-nav">
+        <button id="cal-prev" aria-label="Previous month">‹</button>
+        <span id="cal-month-label"></span>
+        <button id="cal-next" aria-label="Next month">›</button>
+      </div>
+      <div id="calendar-grid" class="calendar-grid"></div>
+      <div class="legend">
+        <span><i class="dot dot-logged"></i> Logged</span>
+        <span><i class="dot dot-predicted"></i> Predicted period</span>
+        <span><i class="dot dot-fertile"></i> Fertile window</span>
+      </div>
+    </main>
+
+    <main id="view-history" class="view" hidden>
+      <form id="add-date-form" class="add-date-form">
+        <input id="add-date-input" type="date" required />
+        <button type="submit">Add</button>
+      </form>
+      <ul id="history-list" class="history-list"></ul>
+    </main>
+
+    <nav class="tab-bar">
+      <button class="tab-btn active" data-view="today">Today</button>
+      <button class="tab-btn" data-view="calendar">Calendar</button>
+      <button class="tab-btn" data-view="history">History</button>
+    </nav>
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js').catch(() => {
+          // Offline shell just won't be available — the app still works online.
+        });
+      });
+    }
+  </script>
+</body>
+</html>

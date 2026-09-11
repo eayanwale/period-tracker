@@ -1,0 +1,8 @@
+backend/terraform/.terraform/
+backend/terraform/.terraform.lock.hcl
+backend/terraform/terraform.tfstate
+backend/terraform/terraform.tfstate.backup
+backend/terraform/terraform.tfvars
+backend/terraform/build/
+backend/lambda/node_modules/
+.DS_Store

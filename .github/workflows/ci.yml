@@ -49,37 +49,12 @@ jobs:
       - name: Terraform validate
         run: terraform -chdir=backend/terraform validate
 
-  deploy-frontend:
-    name: Deploy frontend
-    needs: validate
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
-    env:
-      AWS_REGION: us-east-1
-      SITE_BUCKET: period-tracker-site-947792709164
-      CLOUDFRONT_DISTRIBUTION_ID: E1UYB66GK7QRKA
-      DEPLOY_ROLE_ARN: arn:aws:iam::947792709164:role/period-tracker-github-actions-deploy
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Configure AWS credentials via OIDC
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ env.DEPLOY_ROLE_ARN }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Sync frontend to S3
-        run: |
-          aws s3 sync frontend/ "s3://$SITE_BUCKET" \
-            --delete \
-            --exclude "icons/generate_icons.py" \
-            --exclude "js/test-cycle.mjs"
-
-      - name: Invalidate CloudFront cache
-        run: |
-          aws cloudfront create-invalidation \
-            --distribution-id "$CLOUDFRONT_DISTRIBUTION_ID" \
-            --paths "/*"
+# Auto-deploy (S3 sync + CloudFront invalidation) is disabled for now: the
+# GitHub OIDC role exists (backend/terraform/ci.tf, output
+# github_actions_role_arn) and is scoped correctly, but this AWS account
+# sits in an Organization with an SCP that denies
+# sts:AssumeRoleWithWebIdentity outright. Sort that out at the org level,
+# then reintroduce a deploy-frontend job here (see git history for the
+# working version) that assumes github_actions_role_arn via
+# aws-actions/configure-aws-credentials and runs `aws s3 sync` +
+# `aws cloudfront create-invalidation`. Until then, deploy manually.

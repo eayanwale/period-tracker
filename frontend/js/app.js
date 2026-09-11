@@ -6,10 +6,72 @@ const gateEl = document.getElementById('gate');
 const gateForm = document.getElementById('gate-form');
 const passcodeInput = document.getElementById('passcode-input');
 const gateError = document.getElementById('gate-error');
+const gateHint = document.getElementById('gate-hint');
 const appEl = document.getElementById('app');
+const greetingEl = document.getElementById('greeting');
+
+// ---------- Passcode hints ----------
+// The passcode is a date that matters to us. First wrong guess gets no
+// hint (could just be a typo); each one after that reveals a bit more.
+const PASSCODE_HINTS = [
+  "Hint: it's a date. Think about something we did together ❤️",
+  'Hint: it was sometime after our first date.',
+  "It's the day I asked you to be my girlfriend.",
+];
+
+function getWrongAttempts() {
+  return Number(localStorage.getItem('periodTracker.wrongAttempts') || 0);
+}
+
+function setWrongAttempts(n) {
+  localStorage.setItem('periodTracker.wrongAttempts', String(n));
+}
+
+function showHintForAttempt(attempts) {
+  const hintIndex = attempts - 2; // no hint on the first wrong try
+  if (hintIndex < 0) {
+    gateHint.hidden = true;
+    return;
+  }
+  gateHint.textContent = PASSCODE_HINTS[Math.min(hintIndex, PASSCODE_HINTS.length - 1)];
+  gateHint.hidden = false;
+  gateHint.classList.remove('show');
+  void gateHint.offsetWidth;
+  gateHint.classList.add('show');
+}
 
 let dates = [];
 let calendarCursor = new Date(); // month currently shown
+
+// ---------- Greetings ----------
+// Rotates on every unlock so it doesn't feel static. Purely cosmetic —
+// no personal data involved, safe to keep in a tracked file.
+const GREETINGS = [
+  "Hey you. Miss me yet? 😘",
+  "Well hello there, gorgeous.",
+  "Back for more? I like it.",
+  "Hope you're thinking about me right now.",
+  "You + me + this app = teamwork.",
+  "Knock knock. It's your favorite person.",
+  "Just so you know... I think about you a lot.",
+  "Welcome back, love. Let's see what's coming.",
+  "There she is. The one I built this for.",
+  "Ready when you are, beautiful.",
+];
+
+function showGreeting() {
+  const lastIndex = Number(localStorage.getItem('periodTracker.lastGreeting') ?? -1);
+  let index = Math.floor(Math.random() * GREETINGS.length);
+  if (GREETINGS.length > 1 && index === lastIndex) {
+    index = (index + 1) % GREETINGS.length;
+  }
+  localStorage.setItem('periodTracker.lastGreeting', String(index));
+  greetingEl.textContent = GREETINGS[index];
+  greetingEl.classList.remove('show');
+  // Force reflow so the animation retriggers every login, not just the first.
+  void greetingEl.offsetWidth;
+  greetingEl.classList.add('show');
+}
 
 // ---------- Auth gate ----------
 
@@ -17,12 +79,22 @@ async function tryUnlock(passcode) {
   gateError.hidden = true;
   const ok = await verifyPasscode(passcode).catch(() => false);
   if (!ok) {
+    const attempts = getWrongAttempts() + 1;
+    setWrongAttempts(attempts);
     gateError.hidden = false;
+    gateForm.classList.remove('shake');
+    void gateForm.offsetWidth;
+    gateForm.classList.add('shake');
+    showHintForAttempt(attempts);
     return;
   }
+  setWrongAttempts(0);
+  gateHint.hidden = true;
   savePasscode(passcode);
   gateEl.hidden = true;
   appEl.hidden = false;
+  appEl.classList.add('enter');
+  showGreeting();
   await loadAndRender();
 }
 
@@ -39,6 +111,8 @@ gateForm.addEventListener('submit', (e) => {
     if (ok) {
       gateEl.hidden = true;
       appEl.hidden = false;
+      appEl.classList.add('enter');
+      showGreeting();
       await loadAndRender();
       return;
     }
@@ -232,12 +306,26 @@ const views = {
   history: document.getElementById('view-history'),
 };
 
-document.querySelectorAll('.tab-btn').forEach((btn) => {
+const tabButtons = [...document.querySelectorAll('.tab-btn')];
+const tabIndicator = document.getElementById('tab-indicator');
+
+function moveTabIndicator(btn) {
+  const index = tabButtons.indexOf(btn);
+  tabIndicator.style.transform = `translateX(${index * 100}%)`;
+}
+
+tabButtons.forEach((btn) => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.tab-btn').forEach((b) => b.classList.remove('active'));
+    tabButtons.forEach((b) => b.classList.remove('active'));
     btn.classList.add('active');
+    moveTabIndicator(btn);
     Object.entries(views).forEach(([name, el]) => {
       el.hidden = name !== btn.dataset.view;
+      if (name === btn.dataset.view) {
+        el.classList.remove('enter');
+        void el.offsetWidth;
+        el.classList.add('enter');
+      }
     });
   });
 });

@@ -13,11 +13,18 @@
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
+  <!-- Ambient animated background -->
+  <div class="bg-blobs" aria-hidden="true">
+    <span class="blob blob-a"></span>
+    <span class="blob blob-b"></span>
+    <span class="blob blob-c"></span>
+  </div>
+
   <!-- Passcode gate -->
   <div id="gate" class="gate">
-    <form id="gate-form" class="gate-form">
+    <form id="gate-form" class="gate-form glass">
       <h1>Cycle</h1>
-      <p class="gate-subtitle">Enter the passcode to continue</p>
+      <p class="gate-subtitle">🔒 Extremely sensitive, highly volatile intel ahead.<br />Passcode required — no exceptions, not even for that face.</p>
       <input
         id="passcode-input"
         type="password"
@@ -27,7 +34,8 @@
         required
       />
       <button type="submit">Unlock</button>
-      <p id="gate-error" class="gate-error" hidden>That passcode didn't work.</p>
+      <p id="gate-error" class="gate-error" hidden>Nope. Nice try though.</p>
+      <p id="gate-hint" class="gate-hint" hidden></p>
     </form>
   </div>
 
@@ -35,6 +43,7 @@
   <div id="app" class="app" hidden>
     <header class="app-header">
       <h1>Cycle</h1>
+      <p id="greeting" class="greeting"></p>
     </header>
 
     <main id="view-today" class="view">
@@ -68,16 +77,18 @@
     </main>
 
     <main id="view-calendar" class="view" hidden>
-      <div class="calendar-nav">
-        <button id="cal-prev" aria-label="Previous month">‹</button>
-        <span id="cal-month-label"></span>
-        <button id="cal-next" aria-label="Next month">›</button>
-      </div>
-      <div id="calendar-grid" class="calendar-grid"></div>
-      <div class="legend">
-        <span><i class="dot dot-logged"></i> Logged</span>
-        <span><i class="dot dot-predicted"></i> Predicted period</span>
-        <span><i class="dot dot-fertile"></i> Fertile window</span>
+      <div class="card">
+        <div class="calendar-nav">
+          <button id="cal-prev" aria-label="Previous month">‹</button>
+          <span id="cal-month-label"></span>
+          <button id="cal-next" aria-label="Next month">›</button>
+        </div>
+        <div id="calendar-grid" class="calendar-grid"></div>
+        <div class="legend">
+          <span><i class="dot dot-logged"></i> Logged</span>
+          <span><i class="dot dot-predicted"></i> Predicted period</span>
+          <span><i class="dot dot-fertile"></i> Fertile window</span>
+        </div>
       </div>
     </main>
 
@@ -90,6 +101,7 @@
     </main>
 
     <nav class="tab-bar">
+      <span class="tab-indicator" id="tab-indicator"></span>
       <button class="tab-btn active" data-view="today">Today</button>
       <button class="tab-btn" data-view="calendar">Calendar</button>
       <button class="tab-btn" data-view="history">History</button>

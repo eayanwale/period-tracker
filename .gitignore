@@ -5,4 +5,5 @@ backend/terraform/terraform.tfstate.backup
 backend/terraform/terraform.tfvars
 backend/terraform/build/
 backend/lambda/node_modules/
+backend/scripts/dates.local.json
 .DS_Store

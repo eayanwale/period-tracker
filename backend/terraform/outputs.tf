@@ -17,3 +17,8 @@ output "cloudfront_distribution_id" {
   description = "Needed to invalidate the CloudFront cache after re-uploading the site"
   value       = aws_cloudfront_distribution.site.id
 }
+
+output "github_actions_role_arn" {
+  description = "Role GitHub Actions assumes via OIDC to deploy the frontend — put in the workflow yaml (not secret)"
+  value       = aws_iam_role.github_actions_deploy.arn
+}

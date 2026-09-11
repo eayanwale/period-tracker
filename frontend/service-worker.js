@@ -1,7 +1,7 @@
 // Minimal offline app-shell cache. The API lives on a different origin
 // (API Gateway), so it's never intercepted here — only same-origin static
 // assets are cached.
-const CACHE_NAME = 'cycle-app-v1';
+const CACHE_NAME = 'cycle-app-v2';
 const PRECACHE_URLS = [
   './',
   './index.html',

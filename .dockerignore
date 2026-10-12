@@ -1,0 +1,6 @@
+.git
+backend
+.claude
+CLAUDE.md
+server/node_modules
+*.md

@@ -6,4 +6,8 @@ backend/terraform/terraform.tfvars
 backend/terraform/build/
 backend/lambda/node_modules/
 backend/scripts/dates.local.json
+*.local.json
+seed.json
+server/node_modules/
+scripts/node_modules/
 .DS_Store
